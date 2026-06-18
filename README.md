@@ -6,7 +6,7 @@ representations using ASCII characters. Supports three banner styles:
 standard, shadow, and thinkertoy.
 
 ## Authors
-- Your Name
+- Agbaji Alexander
 
 ## Usage
 1. Make sure the banner files are in the project root:
