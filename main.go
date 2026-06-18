@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -15,12 +14,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	handlers.Templates = tmpl
+	handlers.InitTemplates(tmpl)
 
 	http.HandleFunc("/", handlers.HandleIndex)
 	http.HandleFunc("/ascii-art", handlers.HandleAsciiArt)
 
-	fmt.Println("Server running on http://localhost:8080")
+	http.Handle("/static/",
+		http.StripPrefix("/static/",
+			http.FileServer(http.Dir("static"))))
 
+	log.Println("Server running at http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

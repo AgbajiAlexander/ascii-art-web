@@ -9,12 +9,12 @@ import (
 
 func HandleAsciiArt(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
 	if err := r.ParseForm(); err != nil {
-		http.Error(w, "400 - Bad Request", http.StatusBadRequest)
+		http.Error(w, "bad request", http.StatusBadRequest)
 		return
 	}
 
@@ -22,9 +22,9 @@ func HandleAsciiArt(w http.ResponseWriter, r *http.Request) {
 	banner := r.FormValue("banner")
 
 	if text == "" {
-		render(w, http.StatusBadRequest, models.PageData{
+		render(w, http.StatusBadRequest, "index.html", models.PageData{
 			Banner: banner,
-			Error:  "Please enter text",
+			Error:  "empty input",
 		})
 		return
 	}
@@ -36,18 +36,17 @@ func HandleAsciiArt(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if _, ok := valid[banner]; !ok {
-		render(w, http.StatusBadRequest, models.PageData{
+		render(w, http.StatusBadRequest, "index.html", models.PageData{
 			InputText: text,
-			Error:     "Invalid banner",
+			Error:     "invalid banner",
 		})
 		return
 	}
 
 	chars, err := services.LoadBanner("banners/" + banner + ".txt")
 	if err != nil {
-		render(w, http.StatusNotFound, models.PageData{
+		render(w, http.StatusNotFound, "index.html", models.PageData{
 			InputText: text,
-			Banner:    banner,
 			Error:     err.Error(),
 		})
 		return
@@ -55,22 +54,16 @@ func HandleAsciiArt(w http.ResponseWriter, r *http.Request) {
 
 	result, err := services.GenerateAsciiArt(text, chars)
 	if err != nil {
-		render(w, http.StatusBadRequest, models.PageData{
+		render(w, http.StatusBadRequest, "index.html", models.PageData{
 			InputText: text,
-			Banner:    banner,
 			Error:     err.Error(),
 		})
 		return
 	}
 
-	render(w, http.StatusOK, models.PageData{
+	render(w, http.StatusOK, "index.html", models.PageData{
 		InputText: text,
 		Banner:    banner,
 		Result:    result,
 	})
-}
-
-func render(w http.ResponseWriter, status int, data models.PageData) {
-	w.WriteHeader(status)
-	Templates.ExecuteTemplate(w, "index.html", data)
 }

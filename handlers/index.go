@@ -1,22 +1,19 @@
 package handlers
 
 import (
-	"html/template"
 	"net/http"
 
 	"ascii-art-web/models"
 )
 
-var Templates *template.Template
-
 func HandleIndex(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
-		http.Error(w, "404 - Page Not Found", http.StatusNotFound)
+		http.Error(w, "404 not found", http.StatusNotFound)
 		return
 	}
 
 	if r.Method != http.MethodGet {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -24,7 +21,5 @@ func HandleIndex(w http.ResponseWriter, r *http.Request) {
 		Banner: "standard",
 	}
 
-	if err := Templates.ExecuteTemplate(w, "index.html", data); err != nil {
-		http.Error(w, "500 - Internal Server Error", http.StatusInternalServerError)
-	}
+	render(w, http.StatusOK, "index.html", data)
 }

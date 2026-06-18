@@ -7,8 +7,14 @@ import (
 	"testing"
 )
 
-func TestHandleIndex_Get(t *testing.T) {
-	Templates = template.Must(template.New("index.html").Parse("OK"))
+// helper: safe template init for tests
+func setupIndexTest() {
+	tmpl := template.Must(template.New("index.html").Parse("OK"))
+	InitTemplates(tmpl)
+}
+
+func TestHandleIndex_OK(t *testing.T) {
+	setupIndexTest()
 
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rec := httptest.NewRecorder()
@@ -20,7 +26,22 @@ func TestHandleIndex_Get(t *testing.T) {
 	}
 }
 
-func TestHandleIndex_WrongMethod(t *testing.T) {
+func TestHandleIndex_NotFound(t *testing.T) {
+	setupIndexTest()
+
+	req := httptest.NewRequest(http.MethodGet, "/wrong", nil)
+	rec := httptest.NewRecorder()
+
+	HandleIndex(rec, req)
+
+	if rec.Code != http.StatusNotFound {
+		t.Errorf("expected 404, got %d", rec.Code)
+	}
+}
+
+func TestHandleIndex_MethodNotAllowed(t *testing.T) {
+	setupIndexTest()
+
 	req := httptest.NewRequest(http.MethodPost, "/", nil)
 	rec := httptest.NewRecorder()
 

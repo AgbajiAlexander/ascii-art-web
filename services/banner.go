@@ -13,14 +13,13 @@ func LoadBanner(path string) ([][]string, error) {
 	}
 
 	if len(data) == 0 {
-		return nil, fmt.Errorf("empty banner file")
+		return nil, fmt.Errorf("empty banner")
 	}
 
 	lines := strings.Split(strings.ReplaceAll(string(data), "\r\n", "\n"), "\n")
 
 	var chars [][]string
 
-	// IMPORTANT: standard ascii-art format = skip first empty line
 	for i := 1; i+8 <= len(lines); i += 9 {
 		chars = append(chars, lines[i:i+8])
 	}

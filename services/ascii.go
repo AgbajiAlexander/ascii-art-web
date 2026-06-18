@@ -7,14 +7,14 @@ import (
 
 func GenerateAsciiArt(input string, chars [][]string) (string, error) {
 	input = strings.ReplaceAll(input, "\r\n", "\n")
-	lines := strings.Split(input, "\n")
 
-	// VALIDATION: reject non printable ASCII
 	for _, r := range input {
 		if r != '\n' && (r < 32 || r > 126) {
-			return "", fmt.Errorf("invalid character detected")
+			return "", fmt.Errorf("invalid character")
 		}
 	}
+
+	lines := strings.Split(input, "\n")
 
 	var sb strings.Builder
 

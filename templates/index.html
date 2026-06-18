@@ -1,134 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> ASCII ART GENERATOR</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-        .form-group {
-            margin: 20px 0;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-        textarea {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .banner-options {
-            display: flex;
-            gap: 20px;
-        }
-        .banner-options label {
-            font-weight: normal;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .result {
-            margin-top: 30px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 20px;
-        }
-        pre {
-            font-family: monospace;
-            white-space: pre;
-            overflow-x: auto;
-        }
-        .error {
-            color: red;
-            font-weight: bold;
-        }
-    </style>
+    <title>ASCII Art Generator</title>
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
+
 <body>
-    <h1>ASCII ART GENERATOR</h1>
 
-    <!-- The form sends a POST request to /ascii-art -->
+<div class="container">
+
+    <h1>ASCII Art Generator</h1>
+
+    {{if .Error}}
+        <p class="error">{{.Error}}</p>
+    {{end}}
+
     <form action="/ascii-art" method="POST">
+        <textarea name="text" rows="5" placeholder="Enter text...">{{.InputText}}</textarea>
 
-        <!-- Text input -->
-        <div class="form-group">
-            <label for="text">Enter your text:</label>
-            <textarea
-                id="text"
-                name="text"
-                rows="3"
-                placeholder="Type something..."
-                required
-            >{{.InputText}}</textarea>
-        </div>
+        <select name="banner">
+            <option value="standard">Standard</option>
+            <option value="shadow">Shadow</option>
+            <option value="thinkertoy">Thinkertoy</option>
+        </select>
 
-        <!-- Banner selection -->
-        <div class="form-group">
-            <label>Choose a banner style:</label>
-            <div class="banner-options">
-                <label>
-                    <input type="radio" name="banner" value="standard"
-                        {{if eq .Banner "standard"}}checked{{end}}> Standard
-                </label>
-                <label>
-                    <input type="radio" name="banner" value="shadow"
-                        {{if eq .Banner "shadow"}}checked{{end}}> Shadow
-                </label>
-                <label>
-                    <input type="radio" name="banner" value="thinkertoy"
-                        {{if eq .Banner "thinkertoy"}}checked{{end}}> Thinkertoy
-                </label>
-            </div>
-        </div>
-
-        <!-- Submit button -->
-        <button type="submit">Generate ASCII Art</button>
-
+        <button type="submit">Generate</button>
     </form>
 
-    <!-- Show result if there is one -->
     {{if .Result}}
-    <div class="result">
-        <h2>Result:</h2>
-        <pre>{{.Result}}</pre>
-    </div>
+        <pre class="result">{{.Result}}</pre>
     {{end}}
 
-    <!-- Show error if there is one -->
-    {{if .Error}}
-    <div class="result">
-        <p class="error">{{.Error}}</p>
-    </div>
-    {{end}}
+</div>
 
 </body>
 </html>
